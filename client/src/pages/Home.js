@@ -51,7 +51,7 @@ const Home = () => {
           {data.map((item,index)=> {
             return (
               <tr key={item.id}>
-                <th scope="row">{index+2}</th>
+                <th scope="row">{index+1}</th>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
                 <td>{item.contactNo}</td>
