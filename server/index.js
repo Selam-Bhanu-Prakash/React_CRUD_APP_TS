@@ -72,7 +72,7 @@ app.put("/api/update/:id", (req, res) =>{
     console.log("In Update Service");
     const {id} = req.params;
     const {name, email, contactNo} = req.body;
-    const sqlUpdate = "update contacts set name = ?, email = ?, contact = ? where id = ?";
+    const sqlUpdate = "update contacts set name = ?, email = ?, contactNo = ? where id = ?";
     console.log("sqlUpdate: ",sqlUpdate);
     db.query(sqlUpdate,[name, email, contactNo, id],(err,result)=>{
         if(err){
