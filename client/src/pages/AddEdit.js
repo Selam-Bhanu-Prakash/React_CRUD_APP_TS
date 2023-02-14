@@ -3,7 +3,7 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 import "./AddEdit.css";
 import axios from "axios";
 import {toast} from "react-toastify";
-
+import PhoneInput from 'react-phone-number-input/input'
 
 const initialState = {
     name: "",
@@ -31,39 +31,57 @@ const AddEdit = () => {
             toast.error("Please fill all the input fields");
         }
         else{
-            if(!id)
+            if(isNaN(name.charAt(0)))
             {
-                axios.post("http://localhost:5000/api/post",{
-                    name,
-                    email,
-                    contactNo
-                }).then(()=> {
+                if(contactNo.length<13)
+                {
+                    toast.error("Please provide the contact number with 10 digits");
+                }
+                else{
+                    if(!id)
+                {
+                    axios.post("http://localhost:5000/api/post",{
+                        name,
+                        email,
+                        contactNo
+                    }).then(()=> {
                     setState({name: "", email: "", contactNo: ""})
-                }).catch((err) => toast.error(err.response.data))
-                toast.success("Contact Added Sucessfully");
-                setTimeout(() => history.push("/"), 500);
-            }
-            else
-            {
-                axios.put(`http://localhost:5000/api/update/${id}`,{
-                    name,
-                    email,
-                    contactNo
-                }).then(()=> {
-                    setState({name: "", email: "", contactNo: ""})
-                }).catch((err) => toast.error(err.response.data))
-                toast.success("Contact Updated Sucessfully");
-                setTimeout(() => history.push("/"), 500);
-            }
+                    }).catch((err) => toast.error(err.response.data))
 
-            
+                    toast.success("Contact Added Sucessfully");
+                    setTimeout(() => history.push("/"), 500);
+                }
+                else
+                {
+                    axios.put(`http://localhost:5000/api/update/${id}`,{
+                        name,
+                        email,
+                        contactNo
+                    }).then(()=> {
+                    setState({name: "", email: "", contactNo: ""})
+                    }).catch((err) => toast.error(err.response.data))
+
+                    toast.success("Contact Updated Sucessfully");
+                    setTimeout(() => history.push("/"), 500);
+                }
+
+                }
+            }
+            else{
+                toast.error("User Name Should not start with a Number");
+            }            
         }
     };
 
+
     const handleInputChange =  (e) => {
         const {name, value} = e.target;
-        setState({...state, [name]:value});
+        setState({...state, [name]:value});     
     };
+
+    const handlePhoneField = (e) => {
+        setState({...state, contactNo:e});
+    }
 
   return (
     <div style={{marginTop: "100px"}}>
@@ -81,7 +99,16 @@ const AddEdit = () => {
             <input type="email" id="email" name="email" placeholder="Enter Your Email..." value={email || ""} onChange={handleInputChange} required/>
             <label htmlFor="contactNo">Contact No<sup className="mandatory">*</sup></label>
             
-            <input type="number" id="contactNo" name="contactNo" placeholder="Enter Your Contact No..." value={contactNo || ""} onChange={handleInputChange} required/>
+            
+
+            <PhoneInput
+            id="contactNo"
+            placeholder="Enter phone number"
+            value={contactNo}
+            country="IN"
+            onChange={handlePhoneField}
+            maxLength={11}
+            required/>
 
             <input type="submit" value={id ? "Update": "Save" }/>
             <Link to="/">
