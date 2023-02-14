@@ -4,6 +4,7 @@ import "./AddEdit.css";
 import axios from "axios";
 import {toast} from "react-toastify";
 
+
 const initialState = {
     name: "",
     email:"",
@@ -74,12 +75,13 @@ const AddEdit = () => {
         }}
         onSubmit={handleSubmit}
         >
-            <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter Your name..." value={name || ""} onChange={handleInputChange} />
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter Your Email..." value={email || ""} onChange={handleInputChange} />
-            <label htmlFor="contactNo">Contact No</label>
-            <input type="number" id="contactNo" name="contactNo" placeholder="Enter Your Contact No..." value={contactNo || ""} onChange={handleInputChange} />
+            <label htmlFor="name">Name<sup className="mandatory">*</sup></label>
+            <input type="text" id="name" name="name" placeholder="Enter Your name..." value={name || ""} onChange={handleInputChange} required />
+            <label htmlFor="email">Email<sup className="mandatory">*</sup></label>
+            <input type="email" id="email" name="email" placeholder="Enter Your Email..." value={email || ""} onChange={handleInputChange} required/>
+            <label htmlFor="contactNo">Contact No<sup className="mandatory">*</sup></label>
+            
+            <input type="number" id="contactNo" name="contactNo" placeholder="Enter Your Contact No..." value={contactNo || ""} onChange={handleInputChange} required/>
 
             <input type="submit" value={id ? "Update": "Save" }/>
             <Link to="/">
