@@ -16,7 +16,7 @@ app.get("/", (req, res) =>{
     // const sqlInsert = "Insert into contacts (name,email,contactNo) values ('prakash','bhanu4480@gmail.com',8096920610)";
     // db.query(sqlInsert,(err,result)=>{
     //     console.log("error ",err);
-    //     console.log("reult ",result);
+    //     console.log("result ",result);
     //     res.send("Get Root");
     // });
     
@@ -28,7 +28,18 @@ app.get("/api/get", (req, res) =>{
     const sqlGet = "select * from contacts";
     db.query(sqlGet,(err,result)=>{
         console.log("error ",err);
-        console.log("reult ",result);
+        console.log("result ",result);
+        res.send(result);
+    });
+    
+});
+
+app.get("/api/get/emails", (req, res) =>{
+    const sqlGetMails = "select email from contacts";
+    db.query(sqlGetMails,(err,result)=>{
+        if(err){
+            console.log(err);
+        }
         res.send(result);
     });
     
@@ -67,6 +78,8 @@ app.get("/api/get/:id", (req, res) =>{
     });
     
 });
+
+
 
 app.put("/api/update/:id", (req, res) =>{
     const {id} = req.params;

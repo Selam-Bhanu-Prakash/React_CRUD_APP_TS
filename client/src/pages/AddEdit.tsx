@@ -26,6 +26,8 @@ const initialErr = {
 
 
 const AddEdit = () => {
+    
+    
 
     type User = {
         id:number;
@@ -33,6 +35,17 @@ const AddEdit = () => {
         email: string;
         contactNo:number;
     };
+
+    type Email = {
+        email: string;
+    };
+    const [emailList,setEmailList] = useState<Email[]>([]);
+
+    const loadData = async () => {
+        const response = await axios.get("http://localhost:5000/api/get/emails");
+        setEmailList(response.data);
+    };
+    
 
     const [state, setState] = useState(initialState);
     const [error, setError] = useState(initialError);
@@ -50,8 +63,16 @@ const AddEdit = () => {
 
     const [emailMsg, setEmailMsg] = useState({text: ""});
 
+    const [uniqueMail, setUniqueMail] = useState(true);
+
+    const [dupMail, setDupMail] = useState({text:""});
+
 
     const {id} = useParams();
+
+    useEffect(() => {
+        loadData();
+    },[state]);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/api/get/${id}`)
@@ -102,36 +123,91 @@ const AddEdit = () => {
                     {
                         setError({ename:"",eemail:"", econtactNo:"Please provide the contact number with 10 digits"});
                     }
-                    else{
+                    else
+                    {
                         setError({ename:"",eemail:"", econtactNo:""});
-                        
-                        if(!id)
+
+                        const exists = emailList.find((val) => val.email === email);
+                        if(exists)
                         {
-                                axios.post("http://localhost:5000/api/post",{
-                                        name,
-                                        email,
-                                        contactNo
-                                    }).then(()=> {
-                                    setState({name: "", email: "", contactNo: ""})
-                                    }).catch((err) => setErr(err.response.data))
-                                    setStatus({name: "Contact Added Sucessfully"})
-                                    setTimeout(() => history.push("/"), 800);                                                                    
+                            setDupMail({text:"Duplicate Mail ID. Please change the mail address"})
                         }
                         else
                         {
-                            axios.put(`http://localhost:5000/api/update/${id}`,{
-                                name,
-                                email,
-                                contactNo
-                            }).then(()=> {
-                            setState({name: "", email: "", contactNo: ""})
-                            }).catch((err) => setErr(err.response.data))
-    
-                            setStatus({name: "Contact Updated Sucessfully"})
-                            setTimeout(() => history.push("/"), 800);
-                    }
-    
-                    }
+                            setDupMail({text: ""})
+                        }
+                        
+
+                        if(emailList.length>0)
+                        {                         
+                                   
+                            if(!id)
+                            {
+                                    
+                                if(!exists)
+                                {
+                                    axios.post("http://localhost:5000/api/post",{
+                                                name,
+                                                email,
+                                                contactNo
+                                            })
+                                            .then(()=> {
+                                            setState({name: "", email: "", contactNo: ""})
+                                            })
+                                            .catch((err) => setErr(err.response.data))
+
+                                            setStatus({name: "Contact Added Sucessfully"})
+                                            setTimeout(() => history.push("/"), 800);  
+                                }
+                                                                                                  
+                            }
+                            else
+                            {
+                                setDupMail({text: ""})
+                                axios.put(`http://localhost:5000/api/update/${id}`,{
+                                            name,
+                                            email,
+                                            contactNo
+                                        }).then(()=> {
+                                        setState({name: "", email: "", contactNo: ""})
+                                        }).catch((err) => setErr(err.response.data))
+        
+                                        setStatus({name: "Contact Updated Sucessfully"})
+                                        setTimeout(() => history.push("/"), 800);
+                            }
+                        }
+                        else{
+
+                            if(!id)
+                            {
+                                    axios.post("http://localhost:5000/api/post",{
+                                            name,
+                                            email,
+                                            contactNo
+                                        }).then(()=> {
+                                        setState({name: "", email: "", contactNo: ""})
+                                        }).catch((err) => setErr(err.response.data))
+                                        setStatus({name: "Contact Added Sucessfully"})
+                                        setTimeout(() => history.push("/"), 800);                                                                    
+                            }
+                            else
+                            {
+                                
+                                setDupMail({text: ""})
+                                axios.put(`http://localhost:5000/api/update/${id}`,{
+                                    name,
+                                    email,
+                                    contactNo
+                                }).then(()=> {
+                                setState({name: "", email: "", contactNo: ""})
+                                }).catch((err) => setErr(err.response.data))
+        
+                                setStatus({name: "Contact Updated Sucessfully"})
+                                setTimeout(() => history.push("/"), 800);
+                            }
+                        }
+                    }                      
+                    
                 }
                 else{
                     setError({ename:"User Name Should not start with a Number",eemail:"", econtactNo:""});
@@ -178,6 +254,9 @@ const AddEdit = () => {
             }
             {
                 emailMsg.text && <h6>{emailMsg.text}</h6>
+            }
+            {
+                dupMail.text && <h6>{dupMail.text}</h6>
             }
             <label htmlFor="contactNo">Contact No<sup className="mandatory">*</sup></label>        
             <PhoneInput
