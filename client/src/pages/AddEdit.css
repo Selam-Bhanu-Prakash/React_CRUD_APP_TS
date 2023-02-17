@@ -49,3 +49,29 @@ input[type="submit"]:hover {
 .mandatory{
     color: red;
 }
+
+h6{
+    color: red;
+
+    margin-top: -10px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+h5{
+    color: green;
+    font-style: bold;
+    margin-top: -10px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 50px;
+}
+
+h4{
+    color: green;
+    font-style: bold;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 50px;
+}

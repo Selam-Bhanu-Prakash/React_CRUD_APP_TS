@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import {Link} from "react-router-dom";
+import { Link, useHistory } from 'react-router-dom';
 import "./Home.css";
-import {toast} from "react-toastify";
 import axios from "axios";
 
 
@@ -9,24 +8,39 @@ import axios from "axios";
 
 
 const Home = () => {
-  const [data,setData] = useState([]);
+  type User = {
+      id:number;
+      name: string;
+      email: string;
+      contactNo:number;
+  };
+  const [data,setData] = useState< User[]>([]);
+
+  const initialStatus = {
+    name : ""
+  }
+
+  const [status, setStatus] = useState(initialStatus);
 
   const loadData = async () => {
     const response = await axios.get("http://localhost:5000/api/get");
-    setData(response.data)
+    setData(response.data);
+    setStatus({name:" "});
   };
 
   useEffect(() => {
-    console.log("use effect called");
     loadData();
   },[]);
+
+  const history = useHistory();
 
   const deleteContact = (id) => {
     if(window.confirm("Are you sure to delete the contact? "))
     {
       axios.delete(`http://localhost:5000/api/remove/${id}`);
-      toast.success("Contact Deleted Successfully");
+      setStatus({name: "Contact Deleted Successfully"});
       setTimeout(()=> loadData(), 500);
+      setTimeout(() => history.push("/"), 500);
       
     }
   }
@@ -69,6 +83,9 @@ const Home = () => {
           })}
         </tbody>
       </table>
+      {
+        status.name && <h4>{status.name}</h4>
+      }
     </div>
   )
 }

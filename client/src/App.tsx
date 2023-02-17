@@ -1,18 +1,16 @@
+import * as React from 'react';
 import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom';
 import {Switch} from 'react-router-dom';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Home from './pages/Home';
-import AddEdit from './pages/AddEdit';
-import View from './pages/View';
+import Home from './pages/Home.tsx';
+import AddEdit from './pages/AddEdit.tsx';
+import View from './pages/View.tsx';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
-      <ToastContainer position="top-center" />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/addContact" component={AddEdit} />

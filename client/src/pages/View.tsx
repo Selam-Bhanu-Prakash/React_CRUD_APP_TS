@@ -4,12 +4,18 @@ import axios from 'axios';
 import "./View.css";
 
 const View = () => {
-    const [user, setUser] = useState({});
+    type User = {
+        name: string;
+        email: string;
+        contactNo:number;
+    };
+    const [user, setUser ] = useState<User>({name:'',email:'',contactNo:0});
 
     const {id} = useParams();
 
+    
     useEffect(() => {
-        axios. get(`http://localhost:5000/api/get/${id}`)
+        axios.get(`http://localhost:5000/api/get/${id}`)
         .then((resp) => setUser({ ...resp.data[0]}));
     },[id])
   return (

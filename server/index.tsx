@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const mysql = require("mysql2");
+import bodyParser from "body-parser";
+import cors from "cors";
+import mysql from "mysql2";
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +28,7 @@ app.get("/api/get", (req, res) =>{
     const sqlGet = "select * from contacts";
     db.query(sqlGet,(err,result)=>{
         console.log("error ",err);
-        console.log("reult ",result);
+        console.log("result ",result);
         res.send(result);
     });
     
